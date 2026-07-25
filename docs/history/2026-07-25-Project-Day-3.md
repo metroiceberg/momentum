@@ -1,0 +1,1 @@
+Simplified the application architecture by removing the duplicate App component and making src/App.tsx the single root component. Replaced the hard-coded page title with the reusable Header component.
