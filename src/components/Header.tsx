@@ -1,3 +1,5 @@
+//Reusable application header.
+
 interface HeaderProps{
     title: string;
 }

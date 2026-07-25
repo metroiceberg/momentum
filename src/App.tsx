@@ -1,16 +1,23 @@
+//Root application component.
+// Coordinates the major sections of the application.
+
+import Header from "./components/Header";
+
+
 function App() {
   return (
-    <main>
-      <h1>MOMENTUM</h1>
+    <>
+      <Header title="MOMENTUM" />
 
-      <p>
-        Build 0.0.1
-      </p>
 
-      <button>
-        Begin Today
-      </button>
-    </main>
+      <main>
+        <p>Build 0.0.1a</p>
+
+        <button>
+          Begin Today
+        </button>
+      </main>
+    </>
   );
 }
 
