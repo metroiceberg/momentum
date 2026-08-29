@@ -8,9 +8,10 @@ import { useState } from 'react'
 interface InboxProps {
   items: string[]
   onAdd: (text: string) => void
+  onMakeMission: (index: number) => void
 }
 
-export default function Inbox({ items, onAdd }: InboxProps) {
+export default function Inbox({ items, onAdd, onMakeMission }: InboxProps) {
   const [draft, setDraft] = useState('')
   const canCapture = draft.trim().length > 0
 
@@ -45,7 +46,13 @@ export default function Inbox({ items, onAdd }: InboxProps) {
         <ul className="inbox-list">
         {items.map((item, index) => (
           <li key={index} className="inbox-item">
-            {item}
+            <span className="inbox-item-text">{item}</span>
+            <button
+              className="inbox-item-action"
+              onClick={() => onMakeMission(index)}
+            >
+              Make Mission
+            </button>
           </li>
         ))}
         </ul>

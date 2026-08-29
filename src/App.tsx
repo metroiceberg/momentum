@@ -36,6 +36,13 @@ function App() {
     setInbox((current) => [...current, text])
   }
 
+  function handleMakeMission(index: number) {
+    const text = inbox[index]
+    if (text === undefined) return
+    setMission({ goal: 'Today', nextStep: text, status: 'not-started' })
+    setInbox((current) => current.filter((_, i) => i !== index))
+  }
+
   const canSubmit = draft.trim().length > 0
 
   return (
@@ -76,7 +83,7 @@ function App() {
               )}
             </section>
           )}
-          <Inbox items={inbox} onAdd={handleCapture} />
+          <Inbox items={inbox} onAdd={handleCapture} onMakeMission={handleMakeMission} />
         </main>
       </div>
     </>

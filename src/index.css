@@ -152,9 +152,29 @@ body {
 }
 
 .inbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
   color: var(--text);
+}
+
+.inbox-item-text {
+  color: var(--text);
+}
+
+.inbox-item-action {
+  padding: 4px 10px;
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .inbox-empty {
