@@ -108,6 +108,59 @@ body {
   color: var(--text-h);
 }
 
+.inbox {
+  margin-top: 40px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.inbox-capture {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+
+.inbox-capture input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  color: var(--text-h);
+  background: var(--bg);
+}
+
+.inbox-capture button {
+  padding: 8px 14px;
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font: inherit;
+  cursor: pointer;
+}
+
+.inbox-capture button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.inbox-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inbox-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.inbox-empty {
+  color: var(--text);
+}
+
 h1,
 h2 {
   font-family: var(--heading);

@@ -5,11 +5,13 @@
 import { useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
+import Inbox from './components/Inbox'
 import { advanceStatus } from './services/mission'
 import type { Mission } from './services/mission'
 
 function App() {
   const [mission, setMission] = useState<Mission | null>(null)
+  const [inbox, setInbox] = useState<string[]>([])
   const [draft, setDraft] = useState('')
   const [showForm, setShowForm] = useState(false)
 
@@ -28,6 +30,10 @@ function App() {
   function handleNewMission() {
     setMission(null)
     setShowForm(true)
+  }
+
+  function handleCapture(text: string) {
+    setInbox((current) => [...current, text])
   }
 
   const canSubmit = draft.trim().length > 0
@@ -70,6 +76,7 @@ function App() {
               )}
             </section>
           )}
+          <Inbox items={inbox} onAdd={handleCapture} />
         </main>
       </div>
     </>
