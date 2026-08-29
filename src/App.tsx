@@ -51,10 +51,14 @@ function App() {
       <div className="layout">
         <Sidebar mission={mission} onAdvance={handleAdvance} />
         <main className="content">
-          {mission ? (
+          {mission && mission.status !== 'done' ? (
             <section>
               <h2>Today's next step</h2>
               <p className="content-step">{mission.nextStep}</p>
+              <button onClick={handleNewMission}>Begin a new mission</button>
+            </section>
+          ) : mission ? (
+            <section>
               <button onClick={handleNewMission}>Begin a new mission</button>
             </section>
           ) : (

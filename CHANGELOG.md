@@ -19,3 +19,9 @@ All notable changes to MOMENTUM are documented here.
   persistence, processing, or categorization. Application-level inbox state is
   owned by `App` (consistent with ADR-0001); the Mission Anchor (Sidebar) is
   unchanged.
+
+### Fixed
+- **Completed Mission main-pane presentation**: a `done` Mission no longer shows
+  "Today's next step" or its completed step in the main pane; the pane instead
+  offers "Begin a new mission". The Mission Anchor still shows the completed
+  Mission with its `Done` status, and the Mission remains in application state.
