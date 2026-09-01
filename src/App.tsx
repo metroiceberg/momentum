@@ -6,11 +6,13 @@ import { useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Inbox from './components/Inbox'
+import History from './components/History'
 import { advanceStatus } from './services/mission'
 import type { Mission } from './services/mission'
 
 function App() {
   const [mission, setMission] = useState<Mission | null>(null)
+  const [history, setHistory] = useState<Mission[]>([])
   const [inbox, setInbox] = useState<string[]>([])
   const [draft, setDraft] = useState('')
   const [showForm, setShowForm] = useState(false)
@@ -22,9 +24,13 @@ function App() {
   }
 
   function handleAdvance() {
-    setMission((current) =>
-      current ? { ...current, status: advanceStatus(current.status) } : current
-    )
+    if (!mission) return
+    const next = advanceStatus(mission.status)
+    const updated = { ...mission, status: next }
+    if (next === 'done') {
+      setHistory((current) => [...current, updated])
+    }
+    setMission(updated)
   }
 
   function handleNewMission() {
@@ -88,6 +94,7 @@ function App() {
             </section>
           )}
           <Inbox items={inbox} onAdd={handleCapture} onMakeMission={handleMakeMission} />
+          <History missions={history} />
         </main>
       </div>
     </>

@@ -5,6 +5,10 @@ All notable changes to MOMENTUM are documented here.
 ## [Unreleased]
 
 ### Added
+- **Mission History** (extends First Light): completed Missions are retained in
+  a simple in-memory history list shown in the main pane, so completed work is
+  not lost. History state is owned by `App` (ADR-0001); the Mission Anchor and
+  its behavior are unchanged.
 - **Inbox → Mission promotion** (extends First Light): each captured Inbox item
   has a "Make Mission" action that establishes the captured text as the current
   Mission's next achievable step (`goal: 'Today'`, `status: 'not-started'`,
