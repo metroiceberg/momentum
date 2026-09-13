@@ -4,10 +4,10 @@
 
 ### Concept
 
-MOMENTUM uses a mountain-and-hill metaphor to describe the user's movement from overwhelm to action and, ultimately, progress.
+MOMENTUM uses a mountain-and-hill metaphor to describe the user's movement from overwhelm to action, and ultimately progress.
 
 - **Mountain Range** — the overarching challenge or collection of major challenges. A statement such as “I want to clean my apartment” may represent a Mountain Range rather than a single Mountain, because the apartment contains multiple rooms or areas that can each become their own Mountain.
-- **Mountain** — a major area of accomplishment within a Mountain Range. For example, “Clean the kitchen” can be a Mountain within the larger goal of cleaning the apartment.
+- **Mountain** — a single project that could reasonably be completed in approximately **1–2 hours of focused effort**. A Mountain is a practical scope boundary, not a timer or a requirement that the user finish it in one uninterrupted session. For example, “Clean the kitchen” may be a Mountain within the larger goal of cleaning the apartment.
 - **Mole Hill** — a meaningful, bounded objective within a Mountain. For example, “Clear the kitchen counter” can be a Mole Hill within the kitchen Mountain.
 - **Mission** — an individual achievable step toward completing a Mole Hill. A Mission is the concrete action immediately in front of the user.
 - **Action** — the behavioral interaction with a Mission. In the initial model, this is expected to be represented by the Mission's execution state rather than as a separate domain entity: **Start → Complete**.
@@ -18,6 +18,8 @@ MOMENTUM uses a mountain-and-hill metaphor to describe the user's movement from 
 **Mountain Range → Mountain → Mole Hill → Mission → Action**
 
 A Mountain Range may contain multiple Mountains. A Mountain may contain multiple Mole Hills. A Mole Hill may contain multiple Missions. The structure is intended to be flexible rather than a rigid project plan; users should be able to add, remove, rename, or otherwise adjust meaningful chunks as circumstances change.
+
+The **1–2 hour Mountain boundary is a scope guideline rather than a hard constraint**. A project that would normally require substantially more sustained effort should generally be decomposed into smaller Mountains or otherwise reconsidered. Conversely, a smaller project may remain a Mountain when treating it as a separate project is useful to the user. The goal is to keep a Mountain cognitively manageable and meaningfully completable, not to impose artificial precision.
 
 ### Completion Model
 
@@ -54,6 +56,7 @@ The user does not need to climb the entire mountain range at once. MOMENTUM help
 
 - **The user's intention establishes the direction; MOMENTUM helps provide structure.** The system may eventually assist with decomposition, including AI-assisted decomposition, but understanding the hierarchy should not be a prerequisite for using the product.
 - **The hierarchy is scaffolding, not bureaucracy.** It exists to reduce cognitive load and can change as the user's understanding of the problem changes.
+- **A Mountain should represent a cognitively manageable project.** The approximate 1–2 hour scope provides a useful practical boundary without turning MOMENTUM into a time-management system.
 - **The user retains authority over completion.** MOMENTUM supports judgment rather than replacing it.
 - **Forward momentum matters more than maintaining a perfect task database.** Blocked or impossible Missions should eventually be replaceable or reworked rather than becoming dead ends.
 - **The Mission Anchor stays focused on the current Mission.** The full hierarchy provides context, but the immediate experience remains: here is what you are doing now; Start; do it; Complete.
@@ -65,4 +68,4 @@ MOMENTUM should acknowledge that something may genuinely feel like a mountain. T
 
 ### Current Status
 
-This remains a **WIP product concept**. The terminology, hierarchy, completion model, and closure behavior are being documented before implementation. The next design checkpoint is to define the minimum viable data model for **Mountain Range, Mountain, Mole Hill, and Mission**, including their relationships and the minimum lifecycle required to support this model.
+This remains a **WIP product concept**. The terminology, hierarchy, completion model, closure behavior, and Mountain scope definition are being documented before implementation. The next design checkpoint is to define the minimum viable data model for **Mountain Range, Mountain, Mole Hill, and Mission**, including their relationships and the minimum lifecycle required to support this model.
