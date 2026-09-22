@@ -4,6 +4,11 @@ All notable changes to MOMENTUM are documented here.
 
 ## [Unreleased]
 
+### Design
+- **Mountains to Mole Hills domain model:** documented the recursive Mountain Range model, Mountain/Mole Hill/Mission definitions, ordered Mission progression, upward completion propagation, stabilization-before-maintenance lifecycle, and recurring Mole Hills as the future maintenance mechanism. The World remains conceptual context rather than an application entity.
+- **Future reward possibility:** preserved the idea of optional partner rewards for sustained MOMENTUM maintenance as a future possibility, explicitly outside current implementation scope.
+
+
 ### Added
 - **Mission History** (extends First Light): completed Missions are retained in
   a simple in-memory history list shown in the main pane, so completed work is
