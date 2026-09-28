@@ -23,4 +23,17 @@ MOMENTUM should acknowledge that something may genuinely feel like a mountain. T
 
 ### Current Status
 
-This is a **WIP product concept**. The terminology and model are intentionally being documented before implementation. No additional Mission data model or UI structure is implied by this document yet.
+This is the **WIP product concept** that Milestone 2 ("First Conquest") began to
+implement as a vertical slice. The terminology and model here drive the
+implementation:
+
+- The **hierarchy** (Mountain Range → Mountain → Mole Hill → Mission) is
+  implemented in `src/services/progression.ts` as the Mission Engine domain
+  model.
+- The **progression flow** — Mission → Hill Climbed → Mountain Conquered — is
+  implemented and surfaced through the Mission Anchor (ADR-0001).
+
+See `docs/04_Mission_Engine.md` and
+`docs/adr/0002-mountains-to-mole-hills-progression.md` for the implemented
+model and its decisions.
+

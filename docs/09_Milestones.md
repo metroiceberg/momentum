@@ -41,3 +41,39 @@ Delivered so far:
 
 All state is in-memory and owned by `App` (unidirectional flow, ADR-0001). No
 persistence, router, or AI layer yet.
+
+---
+
+## Milestone 2 — First Conquest
+
+**Status:** Complete
+
+Establishes the minimum hierarchical progression engine
+(**Mountain Range → Mountain → Mole Hill → Mission**) on top of the First Light
+Mission Anchor, so a user can experience a full conquest:
+Mission complete → advance → **Hill Climbed!** → **Mountain Conquered!**
+
+Delivered:
+
+* **Hierarchy domain model** — `MountainRange`, `Mountain`, `MoleHill`,
+  `Mission`, and a `Progression` cursor (`src/services/progression.ts`).
+* **Progression engine** — completes the current Mission, advances within a
+  Hill, then declares Hill Climbed / Mountain Conquered / Range Conquered as
+  the hierarchy is exhausted. Pure and framework-free.
+* **Celebration surface** — completing a Hill, Mountain, or the whole Range is
+  announced visibly and celebratorily, so progress is felt, not silent.
+* **Hierarchy context in the Mission Anchor** — a compact breadcrumb
+  (Range › Mountain › Hill) and an in-Hill progress indicator, keeping the
+  panel focused on the current actionable Mission (ADR-0001).
+* **Seed example Range** — one in-memory Range with named Hills so the full
+  conquest is experienceable; Missions remain user-supplied via the existing
+  Begin Today / Inbox promotion flows (ADR-0001).
+* **Tests** — Vitest unit tests covering every progression branch
+  (`src/services/progression.test.ts`).
+* **Documentation** — `docs/04_Mission_Engine.md` and
+  `docs/adr/0002-mountains-to-mole-hills-progression.md`.
+
+Explicitly out of scope and not implemented: persistence, AI decomposition,
+recurring maintenance, rewards, accounts, multi-range management, and a
+hierarchy editor.
+

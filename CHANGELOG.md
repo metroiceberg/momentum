@@ -5,6 +5,31 @@ All notable changes to MOMENTUM are documented here.
 ## [Unreleased]
 
 ### Added
+- **Hierarchical progression (Milestone 2 — First Conquest)**: introduces the
+  Mountain Range → Mountain → Mole Hill → Mission domain model and a pure
+  progression engine (`src/services/progression.ts`). Completing the current
+  Mission advances within a Hill; exhausting a Hill declares **Hill Climbed!**,
+  exhausting a Mountain declares **Mountain Conquered!**, and exhausting the
+  whole Range declares it conquered. A Celebration surface makes each milestone
+  visible.
+- **Hierarchy context in the Mission Anchor**: the Sidebar now shows a compact
+  breadcrumb (Range › Mountain › Hill) and an in-Hill progress indicator while
+  remaining focused on the current actionable Mission (ADR-0001).
+- **Seed example Range**: one in-memory Range with named Hills
+  (`src/services/demoRange.ts`) so the full conquest is experienceable without
+  persistence or an editor; Missions remain user-supplied through the existing
+  Begin Today / Inbox promotion flows.
+- **Unit tests for the progression engine** (`src/services/progression.test.ts`)
+  via Vitest (new devDependency).
+
+### Changed
+- **Sidebar (Mission Anchor)**: extended to carry hierarchy breadcrumb and
+  hill-progress context; the current-Mission focus and action loop are
+  unchanged.
+
+### Fixed
+- none
+
 - **Mission History** (extends First Light): completed Missions are retained in
   a simple in-memory history list shown in the main pane, so completed work is
   not lost. History state is owned by `App` (ADR-0001); the Mission Anchor and

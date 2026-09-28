@@ -1,41 +1,87 @@
-//Root application component.
+// Root application component.
 // Coordinates the major sections of the application and owns the
-// application-level mission state (ADR-0001), distributing it downward.
+// application-level progression state (ADR-0001), distributing it downward.
 
 import { useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Inbox from './components/Inbox'
 import History from './components/History'
-import { advanceStatus } from './services/mission'
+import Celebration from './components/Celebration'
+import {
+  createProgression,
+  addMission,
+  advanceProgression,
+  currentMission,
+  mountainOf,
+  hillOf,
+  completedMissionsInHill,
+  missionsInHill,
+} from './services/progression'
+import { createDemoRange } from './services/demoRange'
 import type { Mission } from './services/mission'
+import type { ProgressionEvent } from './services/progression'
+
+/// A fresh default progression (demo data, in-memory only — see demoRange.ts).
+function freshProgression() {
+  return createProgression(createDemoRange())
+}
 
 function App() {
-  const [mission, setMission] = useState<Mission | null>(null)
+  const [progression, setProgression] = useState(freshProgression)
   const [history, setHistory] = useState<Mission[]>([])
   const [inbox, setInbox] = useState<string[]>([])
   const [draft, setDraft] = useState('')
   const [showForm, setShowForm] = useState(false)
+  const [celebration, setCelebration] = useState<ProgressionEvent[] | null>(null)
+  const [rangeComplete, setRangeComplete] = useState(false)
+
+  const mission = currentMission(progression) ?? null
+  const mountain = mountainOf(progression)
+  const hill = hillOf(progression)
+  const breadcrumb = `${progression.range.name} › ${mountain.name} › ${hill.name}`
+
+  const totalInHill = missionsInHill(progression)
+  const doneInHill = completedMissionsInHill(progression)
+  const hillProgress =
+    totalInHill > 0 ? `${doneInHill} of ${totalInHill} missions in this hill` : 'New hill'
 
   function handleBegin(nextStep: string) {
-    setMission({ goal: 'Today', nextStep, status: 'not-started' })
+    setProgression((p) =>
+      addMission(p, { goal: 'Today', nextStep, status: 'not-started' }),
+    )
     setDraft('')
     setShowForm(false)
   }
 
   function handleAdvance() {
-    if (!mission) return
-    const next = advanceStatus(mission.status)
-    const updated = { ...mission, status: next }
-    if (next === 'done') {
-      setHistory((current) => [...current, updated])
+    if (!currentMission(progression)) return
+    const result = advanceProgression(progression)
+    const completed = result.events
+      .filter(
+        (e): e is { type: 'mission-completed'; mission: Mission } =>
+          e.type === 'mission-completed',
+      )
+      .map((e) => e.mission)
+    if (completed.length > 0) {
+      setHistory((current) => [...current, ...completed])
     }
-    setMission(updated)
+    if (result.next) {
+      setProgression(result.next)
+    } else {
+      setRangeComplete(true)
+    }
+    if (result.milestones.length > 0) {
+      setCelebration(result.milestones)
+    }
   }
 
-  function handleNewMission() {
-    setMission(null)
-    setShowForm(true)
+  function handleContinue() {
+    if (rangeComplete) {
+      setProgression(freshProgression())
+      setRangeComplete(false)
+    }
+    setCelebration(null)
   }
 
   function handleCapture(text: string) {
@@ -45,27 +91,39 @@ function App() {
   function handleMakeMission(index: number) {
     const text = inbox[index]
     if (text === undefined) return
-    setMission({ goal: 'Today', nextStep: text, status: 'not-started' })
+    setProgression((p) =>
+      addMission(p, { goal: 'Today', nextStep: text, status: 'not-started' }),
+    )
     setInbox((current) => current.filter((_, i) => i !== index))
   }
 
   const canSubmit = draft.trim().length > 0
+  const advanceLabel =
+    mission === null ? null : mission.status === 'not-started' ? 'Start' : 'Mark done'
 
   return (
     <>
       <Header title="MOMENTUM" />
       <div className="layout">
-        <Sidebar mission={mission} onAdvance={handleAdvance} />
+        <Sidebar
+          breadcrumb={breadcrumb}
+          hillProgress={hillProgress}
+          mission={mission}
+          onAdvance={handleAdvance}
+        />
         <main className="content">
-          {mission && mission.status !== 'done' ? (
+          {celebration ? (
+            <Celebration
+              milestones={celebration}
+              onContinue={handleContinue}
+              rangeComplete={rangeComplete}
+            />
+          ) : mission ? (
             <section>
               <h2>Today's next step</h2>
               <p className="content-step">{mission.nextStep}</p>
-              <button onClick={handleNewMission}>Begin a new mission</button>
-            </section>
-          ) : mission ? (
-            <section>
-              <button onClick={handleNewMission}>Begin a new mission</button>
+              <p className="content-progress">{hillProgress}</p>
+              <button onClick={handleAdvance}>{advanceLabel}</button>
             </section>
           ) : (
             <section>
