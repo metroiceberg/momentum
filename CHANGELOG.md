@@ -28,7 +28,13 @@ All notable changes to MOMENTUM are documented here.
   unchanged.
 
 ### Fixed
-- none
+- **Mission lifecycle (Start vs Complete)**: clicking **Start** on a not-started
+  Mission now moves it to **In progress** without advancing the hierarchy or
+  recording it to History. Only **Complete** (in-progress → done) invokes the
+  progression engine, records the Mission to History, and can trigger a
+  Hill/Mountain/Range milestone. An in-progress Mission remains the active
+  Mission Anchor. Added `performAction`/`setCurrentMissionStatus` in
+  `src/services/progression.ts` to centralize and unit-test the lifecycle.
 
 - **Mission History** (extends First Light): completed Missions are retained in
   a simple in-memory history list shown in the main pane, so completed work is

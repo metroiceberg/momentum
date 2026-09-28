@@ -11,7 +11,7 @@ import Celebration from './components/Celebration'
 import {
   createProgression,
   addMission,
-  advanceProgression,
+  performAction,
   currentMission,
   mountainOf,
   hillOf,
@@ -20,7 +20,7 @@ import {
 } from './services/progression'
 import { createDemoRange } from './services/demoRange'
 import type { Mission } from './services/mission'
-import type { ProgressionEvent } from './services/progression'
+import type { MissionAction, ProgressionEvent } from './services/progression'
 
 /// A fresh default progression (demo data, in-memory only — see demoRange.ts).
 function freshProgression() {
@@ -55,20 +55,15 @@ function App() {
   }
 
   function handleAdvance() {
-    if (!currentMission(progression)) return
-    const result = advanceProgression(progression)
-    const completed = result.events
-      .filter(
-        (e): e is { type: 'mission-completed'; mission: Mission } =>
-          e.type === 'mission-completed',
-      )
-      .map((e) => e.mission)
-    if (completed.length > 0) {
-      setHistory((current) => [...current, ...completed])
+    const m = currentMission(progression)
+    if (!m) return
+    const action: MissionAction = m.status === 'not-started' ? 'start' : 'complete'
+    const result = performAction(progression, action)
+    if (result.completedMission) {
+      setHistory((current) => [...current, result.completedMission!])
     }
-    if (result.next) {
-      setProgression(result.next)
-    } else {
+    setProgression(result.progression)
+    if (result.rangeComplete) {
       setRangeComplete(true)
     }
     if (result.milestones.length > 0) {

@@ -65,6 +65,25 @@ Hill simultaneously climbs that Hill *and* conquers the Mountain. Every
 transition is reported as an event (`ProgressionEvent`) so the UI can make each
 milestone visible and celebratory rather than quietly passing over it.
 
+## Mission Lifecycle (Start vs Complete)
+
+Only completion drives the progression rules above. The full user-facing
+lifecycle of a single Mission is:
+
+```
+not-started ──Start──▶ in-progress ──Complete──▶ done ──▶ progression engine
+```
+
+- **Start** (`not-started` → `in-progress`) is a routine transition: the
+  hierarchy does not move, the Mission is not recorded to History, and the
+  Mission remains the active Mission Anchor while it is being worked.
+- **Complete** (`in-progress` → `done`) is the only action that invokes
+  `advanceProgression`; it records the Mission to History and may cascade into
+  Hill/Mountain/Range milestones.
+
+This decision is centralized in `performAction` (`src/services/progression.ts`)
+so it can be unit-tested independently of the React wiring (`progression.test.ts`).
+
 ## Progression Events
 
 | Event                | Meaning                                            |

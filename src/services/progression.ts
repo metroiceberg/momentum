@@ -10,7 +10,7 @@
 // decomposition, or hierarchy editor here — a Mission becomes part of a hill
 // when the user states it (Begin Today / Inbox promotion).
 
-import type { Mission } from './mission'
+import type { Mission, MissionStatus } from './mission'
 
 export interface MoleHill {
   /** Stable identifier for the hill. */
@@ -127,7 +127,7 @@ export function advanceProgression(p: Progression): AdvanceResult {
   const milestones: ProgressionEvent[] = []
 
   // Reflect the completed Mission in a new Range (pure update).
-  const nextRange = withMissionDone(p.range, p.mountainIndex, p.hillIndex, p.missionIndex)
+  const nextRange = withMissionStatus(p.range, p.mountainIndex, p.hillIndex, p.missionIndex, 'done')
 
   // 1. A next Mission exists within this Hill.
   if (p.missionIndex < hillOf(p).missions.length - 1) {
@@ -215,15 +215,34 @@ export function addMission(p: Progression, mission: Mission): Progression {
   }
 }
 
-/** Return a copy of `range` with the Mission at the given position marked done. */
-function withMissionDone(
+/**
+ * Set the status of the current Mission. Returns a new Progression; the input
+ * is not mutated. Used for the routine lifecycle transition (Start) that does
+ * not advance the hierarchy.
+ */
+export function setCurrentMissionStatus(p: Progression, status: MissionStatus): Progression {
+  return {
+    ...p,
+    range: withMissionStatus(
+      p.range,
+      p.mountainIndex,
+      p.hillIndex,
+      p.missionIndex,
+      status,
+    ),
+  }
+}
+
+/** Return a copy of `range` with the Mission at the given position's status set. */
+function withMissionStatus(
   range: MountainRange,
   mountainIndex: number,
   hillIndex: number,
   missionIndex: number,
+  status: MissionStatus,
 ): MountainRange {
   const missions = range.mountains[mountainIndex].hills[hillIndex].missions.map(
-    (m, i) => (i === missionIndex ? { ...m, status: 'done' as const } : m),
+    (m, i) => (i === missionIndex ? { ...m, status } : m),
   )
   const hills = range.mountains[mountainIndex].hills.map((h, i) =>
     i === hillIndex ? { ...h, missions } : h,
@@ -232,4 +251,64 @@ function withMissionDone(
     i === mountainIndex ? { ...m, hills } : m,
   )
   return { ...range, mountains }
+}
+
+/**
+ * The lifecycle actions a user can perform on the current Mission.
+ *
+ * - `start`    — not-started → in-progress. Never advances the hierarchy and
+ *                is never recorded to History; the Mission stays the active
+ *                Mission Anchor.
+ * - `complete` — in-progress → done. This is the only action that invokes the
+ *                progression engine (and may cascade to Hill/Mountain/Range).
+ */
+export type MissionAction = 'start' | 'complete'
+
+export interface ActionResult {
+  /** The Progression after the action. */
+  progression: Progression
+  /** The Mission completed by this action, or null (e.g. for `start`). */
+  completedMission: Mission | null
+  /** Celebratory milestones surfaced by completing this Mission. */
+  milestones: ProgressionEvent[]
+  /** True when this action completed the final Mission of the Range. */
+  rangeComplete: boolean
+}
+
+/**
+ * Apply a user lifecycle action to the current Mission (see `MissionAction`).
+ * Centralizes the user-facing Start vs Complete decision so it is testable
+ * independently of the React wiring.
+ */
+export function performAction(p: Progression, action: MissionAction): ActionResult {
+  const mission = currentMission(p)
+  if (!mission) {
+    return { progression: p, completedMission: null, milestones: [], rangeComplete: false }
+  }
+
+  if (action === 'start') {
+    return {
+      progression: setCurrentMissionStatus(p, 'in-progress'),
+      completedMission: null,
+      milestones: [],
+      rangeComplete: false,
+    }
+  }
+
+  const result = advanceProgression(p)
+  const completedMission =
+    result.events.find(
+      (e): e is { type: 'mission-completed'; mission: Mission } =>
+        e.type === 'mission-completed',
+    )?.mission ?? null
+
+  return {
+    // On range completion advanceProgression yields `next === null`; keep the
+    // Progression with the final Mission marked done for a stable terminal view.
+    progression:
+      result.next ?? setCurrentMissionStatus(p, 'done'),
+    completedMission,
+    milestones: result.milestones,
+    rangeComplete: result.next === null,
+  }
 }

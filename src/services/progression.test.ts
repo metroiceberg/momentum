@@ -9,6 +9,7 @@ import {
   createProgression,
   advanceProgression,
   addMission,
+  performAction,
   currentMission,
   completedMissionsInHill,
 } from './progression'
@@ -207,5 +208,90 @@ describe('empty current Hill', () => {
     const result = advanceProgression(p)
     expect(result.events).toHaveLength(0)
     expect(result.next).toBe(p)
+  })
+})
+
+describe('performAction — Start lifecycle', () => {
+  it('moves a not-started Mission to in-progress without advancing the hierarchy', () => {
+    const p = createProgression(buildRange()) // current: A1 (not-started)
+    const result = performAction(p, 'start')
+
+    // Start must not complete, record, or progress.
+    expect(result.completedMission).toBeNull()
+    expect(result.milestones).toEqual([])
+    expect(result.rangeComplete).toBe(false)
+
+    // The Mission stays the active anchor (cursor unmoved)…
+    expect(result.progression.mountainIndex).toBe(0)
+    expect(result.progression.hillIndex).toBe(0)
+    expect(result.progression.missionIndex).toBe(0)
+    // …now in-progress, not done.
+    expect(currentMission(result.progression)?.status).toBe('in-progress')
+  })
+
+  it('repeated Start keeps the Mission in-progress without completing it', () => {
+    let p = createProgression(buildRange())
+    p = performAction(p, 'start').progression
+    p = performAction(p, 'start').progression
+    expect(currentMission(p)?.status).toBe('in-progress')
+    expect(currentMission(p)?.nextStep).toBe('A1')
+  })
+
+  it('does nothing when the current Hill has no Mission', () => {
+    const range = buildRange()
+    range.mountains[0].hills[0].missions = []
+    const p = createProgression(range)
+    const result = performAction(p, 'start')
+    expect(result.progression).toBe(p)
+    expect(result.completedMission).toBeNull()
+  })
+})
+
+describe('performAction — Complete lifecycle', () => {
+  it('completes an in-progress Mission and advances to the next', () => {
+    let p = createProgression(buildRange()) // A1 not-started
+    p = performAction(p, 'start').progression // A1 in-progress
+    const result = performAction(p, 'complete')
+
+    expect(result.completedMission?.nextStep).toBe('A1')
+    expect(result.completedMission?.status).toBe('done')
+    // Progression advanced within the Hill (routine, no milestone).
+    expect(currentMission(result.progression)?.nextStep).toBe('A2')
+    expect(result.milestones).toEqual([])
+    expect(result.rangeComplete).toBe(false)
+  })
+
+  it('surfaces the Hill Climbed milestone when completing a Hill\'s last Mission', () => {
+    // Start+complete A1 -> A2, then complete A2 (climbs Hill A).
+    let p = createProgression(buildRange())
+    p = performAction(performAction(p, 'start').progression, 'complete').progression
+    const result = performAction(p, 'complete')
+
+    expect(result.completedMission?.nextStep).toBe('A2')
+    expect(result.milestones.map((e) => e.type)).toEqual(['hill-climbed'])
+    expect(currentMission(result.progression)?.nextStep).toBe('B1')
+  })
+
+  it('marks the Range complete and keeps the final Mission done at the end', () => {
+    // Walk every Mission through the full Start then Complete loop.
+    let p = createProgression(buildRange()) // A1
+    for (let i = 0; i < 7; i++) {
+      p = performAction(p, 'start').progression
+      const result = performAction(p, 'complete')
+      if (result.rangeComplete) {
+        expect(result.completedMission?.nextStep).toBe('D1')
+        expect(result.completedMission?.status).toBe('done')
+        expect(result.milestones.map((e) => e.type)).toEqual([
+          'hill-climbed',
+          'mountain-conquered',
+          'range-complete',
+        ])
+        // Terminal view keeps the final Mission marked done.
+        expect(currentMission(result.progression)?.status).toBe('done')
+        return
+      }
+      p = result.progression
+    }
+    throw new Error('expected the Range to complete within 7 Missions')
   })
 })
