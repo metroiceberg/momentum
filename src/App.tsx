@@ -29,13 +29,18 @@ function freshProgression() {
 }
 
 function App() {
-  const [progression, setProgression] = useState(() => loadPersistedState()?.progression ?? freshProgression())
-  const [history, setHistory] = useState<Mission[]>(() => loadPersistedState()?.history ?? [])
-  const [inbox, setInbox] = useState<string[]>(() => loadPersistedState()?.inbox ?? [])
+  const [persistedState] = useState(loadPersistedState)
+  const [progression, setProgression] = useState(
+    () => persistedState?.progression ?? freshProgression(),
+  )
+  const [history, setHistory] = useState<Mission[]>(() => persistedState?.history ?? [])
+  const [inbox, setInbox] = useState<string[]>(() => persistedState?.inbox ?? [])
   const [draft, setDraft] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [celebration, setCelebration] = useState<ProgressionEvent[] | null>(null)
-  const [rangeComplete, setRangeComplete] = useState(() => loadPersistedState()?.rangeComplete ?? false)
+  const [rangeComplete, setRangeComplete] = useState(
+    () => persistedState?.rangeComplete ?? false,
+  )
 
   useEffect(() => {
     savePersistedState(createPersistedState(progression, history, inbox, rangeComplete))
