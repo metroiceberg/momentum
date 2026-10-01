@@ -5,10 +5,12 @@
 // (draft text, forms, celebrations) is deliberately not persisted.
 
 import type { Mission } from './mission'
-import type { Progression } from './progression'
+import type { Progression, MoleHill, MountainRange } from './progression'
 
 const STORAGE_KEY = 'momentum.state'
 const STORAGE_VERSION = 1
+
+const MISSION_STATUSES = new Set(['not-started', 'in-progress', 'done'])
 
 interface StorageLike {
   getItem(key: string): string | null
@@ -85,20 +87,78 @@ function isPersistedState(value: unknown): value is PersistedState {
 
   const candidate = value as Record<string, unknown>
   if (candidate.version !== STORAGE_VERSION) return false
-  if (!candidate.progression || typeof candidate.progression !== 'object') return false
-  if (!Array.isArray(candidate.history)) return false
+  if (!isProgression(candidate.progression)) return false
+  // History items are rendered directly (nextStep, status) — reject malformed
+  // entries so a corrupt saved list cannot crash the History surface.
+  if (!Array.isArray(candidate.history) || !candidate.history.every(isMission)) return false
   if (!Array.isArray(candidate.inbox) || !candidate.inbox.every((item) => typeof item === 'string')) return false
   if (typeof candidate.rangeComplete !== 'boolean') return false
 
-  const progression = candidate.progression as Record<string, unknown>
+  return true
+}
+
+/**
+ * Validate that a stored Progression is structurally render-safe: resolving
+ * its indices must yield a real Mountain and Mole Hill, and its Missions must
+ * be well-formed. Anything else is rejected so loaders fall back to a fresh
+ * in-memory session rather than crashing at render (graceful fallback).
+ */
+function isProgression(value: unknown): value is Progression {
+  if (!value || typeof value !== 'object') return false
+  const p = value as Record<string, unknown>
+
+  if (
+    !Number.isInteger(p.mountainIndex) ||
+    !Number.isInteger(p.hillIndex) ||
+    !Number.isInteger(p.missionIndex) ||
+    !isMountainRange(p.range)
+  ) {
+    return false
+  }
+
+  const range = p.range as MountainRange
+  const mountain = range.mountains[p.mountainIndex as number]
+  if (!mountain) return false
+  const hill = mountain.hills[p.hillIndex as number]
+  if (!hill) return false
+
+  // `missionIndex` must be a valid position in the current Hill. An empty Hill
+  // is valid and points at index 0 (no current Mission yet).
+  return hill.missions.length === 0
+    ? p.missionIndex === 0
+    : (p.missionIndex as number) >= 0 && (p.missionIndex as number) < hill.missions.length
+}
+
+function isMountainRange(value: unknown): value is MountainRange {
+  if (!value || typeof value !== 'object') return false
+  const r = value as Record<string, unknown>
   return (
-    typeof progression.mountainIndex === 'number' &&
-    typeof progression.hillIndex === 'number' &&
-    typeof progression.missionIndex === 'number' &&
-    Number.isInteger(progression.mountainIndex) &&
-    Number.isInteger(progression.hillIndex) &&
-    Number.isInteger(progression.missionIndex) &&
-    progression.range !== null &&
-    typeof progression.range === 'object'
+    typeof r.name === 'string' &&
+    Array.isArray(r.mountains) &&
+    r.mountains.length > 0 &&
+    r.mountains.every(isMountain)
+  )
+}
+
+function isMountain(value: unknown): boolean {
+  if (!value || typeof value !== 'object') return false
+  const m = value as Record<string, unknown>
+  return Array.isArray(m.hills) && m.hills.length > 0 && m.hills.every(isMoleHill)
+}
+
+function isMoleHill(value: unknown): value is MoleHill {
+  if (!value || typeof value !== 'object') return false
+  const h = value as Record<string, unknown>
+  return Array.isArray(h.missions) && h.missions.every(isMission)
+}
+
+function isMission(value: unknown): value is Mission {
+  if (!value || typeof value !== 'object') return false
+  const m = value as Record<string, unknown>
+  return (
+    typeof m.goal === 'string' &&
+    typeof m.nextStep === 'string' &&
+    typeof m.status === 'string' &&
+    MISSION_STATUSES.has(m.status)
   )
 }
