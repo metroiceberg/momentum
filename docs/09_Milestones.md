@@ -111,3 +111,18 @@ synchronization, multi-device state, and user-owned hierarchy management remain
 future work.
 
 ---
+
+## Current Design Direction (note)
+
+The **product metaphor is evolving** from Mountains / Conquest to a broader
+**Jungle / Colony** model (Jungle, Territory, Taming / Clearing, **Colony
+Established**, Maintenance) — see `docs/adr/0003-jungle-and-colony-product-metaphor.md`
+and `docs/08_Feature_Ideas.md`.
+
+The **implemented progression engine and its domain model remain unchanged** by
+this evolution. Milestone 2 (above) is preserved as an accurate historical record
+of what was built: the **Mountain Range → Mountain → Mole Hill → Mission**
+hierarchy, its progression rules, and its celebration of Hill Climbed / Mountain
+Conquered. Domain terminology may be reconsidered separately after the
+Jungle/Colony concept has been fully designed.
+

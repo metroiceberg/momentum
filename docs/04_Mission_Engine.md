@@ -13,6 +13,30 @@ in `src/services/progression.ts`. It is intentionally implementation-flavored:
 the product language lives in `docs/08_Feature_Ideas.md`, and the interface
 philosophy in `docs/adr/0001-mission-anchor-first-light.md`.
 
+## Terminology: Implementation vs Product Language
+
+The product metaphor evolved after this engine was implemented. It is important
+to distinguish three things:
+
+- **Current implementation terminology (this document).** The implemented domain
+  model and its TypeScript types are **Mountain Range → Mountain → Mole Hill →
+  Mission**. This is what lives in `src/`, what the progression engine
+  operates on, and what the UI renders. It is unchanged by the product-metaphor
+  evolution and remains the source of truth for the implemented behavior.
+- **Current product-language direction.** The conceptual/product language has
+  evolved to a **Jungle / Colony** model — Jungle, Territory, Taming / Clearing,
+  **Colony Established**, and Maintenance (see `docs/08_Feature_Ideas.md` and
+  `docs/adr/0003-jungle-and-colony-product-metaphor.md`). This is a design
+  direction for where MOMENTUM is going conceptually.
+- **Future domain-model reconsideration.** Whether and how the implemented
+  hierarchy and TypeScript terminology should be renamed to align with the
+  Jungle/Colony concept is deliberately deferred. It will be considered only
+  after the concept has been fully designed. No TypeScript rename happens as
+  part of this documentation.
+
+In short: the Mountain hierarchy is what is built; Jungle/Colony is where the
+product language is heading; aligning the two is a future decision.
+
 ## Domain Model
 
 The hierarchy is four levels deep, from the broadest container to the single

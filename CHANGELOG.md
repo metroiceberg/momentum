@@ -5,6 +5,14 @@ All notable changes to MOMENTUM are documented here.
 ## [Unreleased]
 
 ### Design
+- **Jungle and Colony product metaphor:** documented the evolution of MOMENTUM's
+  product language from Mountains / Conquest to a broader Jungle / Colony model
+  — Jungle (persistent complexity), Territory, Taming / Clearing, **Colony
+  Established**, and Maintenance as continued stewardship. The decision is
+  recorded in ADR-0003. This is a product-language/design direction only; the
+  implemented Mountain hierarchy, progression engine, persistence, and UI remain
+  unchanged, and domain-term renaming is deferred until the concept is fully
+  designed.
 - **Mountains to Mole Hills domain model:** documented the recursive Mountain Range model, Mountain/Mole Hill/Mission definitions, ordered Mission progression, upward completion propagation, stabilization-before-maintenance lifecycle, and recurring Mole Hills as the future maintenance mechanism. The World remains conceptual context rather than an application entity.
 - **Future reward possibility:** preserved the idea of optional partner rewards for sustained MOMENTUM maintenance as a future possibility, explicitly outside current implementation scope.
 
