@@ -23,7 +23,7 @@ import type { Mission } from './services/mission'
 import type { MissionAction, ProgressionEvent } from './services/progression'
 import { createPersistedState, loadPersistedState, savePersistedState } from './services/persistence'
 
-/// A fresh default progression (demo data, in-memory only — see demoRange.ts).
+/// A fresh default progression used when no persisted application state exists.
 function freshProgression() {
   return createProgression(createDemoRange())
 }
