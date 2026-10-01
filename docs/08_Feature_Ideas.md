@@ -107,6 +107,59 @@ A **Mission** is simply the **next actionable, achievable step toward clearing t
 
 A Mission represents the user's current position in the Mole Hill's ordered progression. The user does not need to manage the entire sequence at once; MOMENTUM keeps attention on the Mission immediately in front of them.
 
+### Mission Execution Extensions — Future Design
+
+The Mission model should eventually distinguish **the nature of the work** from the Mission's place in the hierarchy. These capabilities are intentionally future design work and are **not part of the current Milestone 3 implementation**.
+
+#### Mission Work Type
+
+When appropriate, MOMENTUM may ask whether a Mission is a **huge task** or **maintenance**.
+
+- **Maintenance** — routine work that does not need a dedicated work-session timer. The user starts the Mission, performs the work, and completes it.
+- **Huge task** — a Mission whose work is conceptually straightforward but potentially large in physical or accumulated volume. The Mission should not be artificially split into additional Missions merely because the work takes multiple sessions.
+
+This classification describes **how the Mission should be approached**, not a new hierarchy level and not a replacement for the user's judgment. Future AI assistance may eventually infer or suggest the classification through conversation rather than requiring the user to make a technical distinction.
+
+#### Work Sessions
+
+For a huge task, MOMENTUM may begin a bounded work session automatically when the Mission starts. A Pomodoro-style work interval is the initial conceptual model; exact duration, configurability, and break behavior remain design questions for later implementation.
+
+The intended interaction is:
+
+**Start → Work Session → Continue → Work Session → Continue → … → Complete**
+
+**Continue** means that the same Mission remains active and another work session begins. It does not advance the hierarchy and does not represent partial completion.
+
+The purpose is to accommodate volume without turning time management into another source of cognitive overhead.
+
+#### Pause and Mission Switching
+
+A long-running Mission should also be pausable without being considered incomplete or failed.
+
+**Pause** means: *stop working on this Mission for now; preserve it for later.* A Mission may be paused because the user needs a break, wants to work on something else, or is finished working for the day.
+
+When a Mission is paused, MOMENTUM may offer the user an opportunity to switch to another available Mission. The user remains in control of that choice; the system should not require them to finish an onerous Mission before allowing productive movement elsewhere.
+
+The intended interaction may therefore become:
+
+**Start → Work → Pause → Switch to another Mission → Work → Complete → Return to paused Mission later**
+
+Pausing does not advance the hierarchy. **Complete** remains the only action that advances progression.
+
+A daily stopping point is simply a contextual reason for pausing rather than a separate Mission state. For example, after a long day of work, MOMENTUM may acknowledge substantial progress and offer to pause the current work for the day.
+
+#### Sustainable Momentum Principle
+
+MOMENTUM should optimize for **sustainable forward movement**, not maximum uninterrupted productivity. The system should allow the user to change focus, take breaks, stop for the day, and return later without treating those decisions as failure.
+
+This preserves a critical distinction:
+
+- **Continue** — keep working on the same Mission.
+- **Pause** — stop working on the same Mission for now.
+- **Complete** — declare the Mission finished and allow progression.
+
+The hierarchy remains stable while the user's execution context changes.
+
 ### Progression Rules
 
 Mission progression follows a simple decision tree:
