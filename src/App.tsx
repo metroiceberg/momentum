@@ -2,7 +2,7 @@
 // Coordinates the major sections of the application and owns the
 // application-level progression state (ADR-0001), distributing it downward.
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Inbox from './components/Inbox'
@@ -21,6 +21,7 @@ import {
 import { createDemoRange } from './services/demoRange'
 import type { Mission } from './services/mission'
 import type { MissionAction, ProgressionEvent } from './services/progression'
+import { createPersistedState, loadPersistedState, savePersistedState } from './services/persistence'
 
 /// A fresh default progression (demo data, in-memory only — see demoRange.ts).
 function freshProgression() {
@@ -28,13 +29,17 @@ function freshProgression() {
 }
 
 function App() {
-  const [progression, setProgression] = useState(freshProgression)
-  const [history, setHistory] = useState<Mission[]>([])
-  const [inbox, setInbox] = useState<string[]>([])
+  const [progression, setProgression] = useState(() => loadPersistedState()?.progression ?? freshProgression())
+  const [history, setHistory] = useState<Mission[]>(() => loadPersistedState()?.history ?? [])
+  const [inbox, setInbox] = useState<string[]>(() => loadPersistedState()?.inbox ?? [])
   const [draft, setDraft] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [celebration, setCelebration] = useState<ProgressionEvent[] | null>(null)
-  const [rangeComplete, setRangeComplete] = useState(false)
+  const [rangeComplete, setRangeComplete] = useState(() => loadPersistedState()?.rangeComplete ?? false)
+
+  useEffect(() => {
+    savePersistedState(createPersistedState(progression, history, inbox, rangeComplete))
+  }, [progression, history, inbox, rangeComplete])
 
   const mission = currentMission(progression) ?? null
   const mountain = mountainOf(progression)
