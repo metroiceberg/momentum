@@ -77,3 +77,37 @@ Explicitly out of scope and not implemented: persistence, AI decomposition,
 recurring maintenance, rewards, accounts, multi-range management, and a
 hierarchy editor.
 
+
+## Milestone 3 — First Persistence
+
+**Status:** In progress
+
+Introduces the first durable application state without introducing accounts,
+backend infrastructure, synchronization, or an external data service.
+
+Delivered so far:
+
+* **Local persistence service** — versioned browser-local storage for the current
+  Progression, Mission History, Inbox, and Range completion state.
+* **Startup restoration** — MOMENTUM restores the saved application state when
+  the browser loads instead of starting from a fresh in-memory session.
+* **Automatic saves** — meaningful application-state changes are written back
+  to local storage through the application-level state owner in `App`.
+* **Graceful fallback** — missing, malformed, unsupported, or inaccessible
+  storage falls back to a fresh in-memory session rather than preventing the
+  application from starting.
+* **Persistence tests** — round-trip, empty-storage, unsupported-version, and
+  malformed-data behavior are covered in `src/services/persistence.test.ts`.
+
+Still to come in this milestone:
+
+* Validate the persisted state against the evolving domain model as the
+  hierarchy becomes user-owned.
+* Decide whether and how persisted state should be reset or migrated when the
+  domain schema changes.
+
+Persistence remains intentionally local-only. Accounts, backend storage,
+synchronization, multi-device state, and user-owned hierarchy management remain
+future work.
+
+---
