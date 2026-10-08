@@ -5,6 +5,13 @@ All notable changes to MOMENTUM are documented here.
 ## [Unreleased]
 
 ### Design
+- **Persistence policy (ADR-0004):** documented that while MOMENTUM is pre-1.0
+  and the domain model is under active development, persisted state that is
+  missing, malformed, structurally invalid, or incompatible with the current
+  storage version is rejected and replaced by fresh application state. Formal
+  state migrations are deferred until the domain model stabilizes. No
+  implementation change — the existing graceful-fallback behavior already
+  follows this policy.
 - **Jungle and Colony product metaphor:** documented the evolution of MOMENTUM's
   product language from Mountains / Conquest to a broader Jungle / Colony model
   — Jungle (persistent complexity), Territory, Taming / Clearing, **Colony

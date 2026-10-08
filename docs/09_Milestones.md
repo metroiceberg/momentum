@@ -80,12 +80,12 @@ hierarchy editor.
 
 ## Milestone 3 — First Persistence
 
-**Status:** In progress
+**Status:** Complete
 
 Introduces the first durable application state without introducing accounts,
 backend infrastructure, synchronization, or an external data service.
 
-Delivered so far:
+Delivered:
 
 * **Local persistence service** — versioned browser-local storage for the current
   Progression, Mission History, Inbox, and Range completion state.
@@ -96,19 +96,20 @@ Delivered so far:
 * **Graceful fallback** — missing, malformed, unsupported, or inaccessible
   storage falls back to a fresh in-memory session rather than preventing the
   application from starting.
-* **Persistence tests** — round-trip, empty-storage, unsupported-version, and
-  malformed-data behavior are covered in `src/services/persistence.test.ts`.
-
-Still to come in this milestone:
-
-* Validate the persisted state against the evolving domain model as the
-  hierarchy becomes user-owned.
-* Decide whether and how persisted state should be reset or migrated when the
-  domain schema changes.
+* **Persistence policy (ADR-0004)** — while MOMENTUM is pre-1.0 and the domain
+  model is under active development, persisted state that is missing, malformed,
+  structurally invalid, or incompatible with the current storage version is
+  rejected and replaced by fresh application state. Formal state migrations are
+  deferred until the domain model stabilizes.
+* **Persistence tests** — round-trip, empty-storage, unsupported-version,
+  malformed-data, and structurally-invalid behavior are covered in
+  `src/services/persistence.test.ts`.
 
 Persistence remains intentionally local-only. Accounts, backend storage,
 synchronization, multi-device state, and user-owned hierarchy management remain
-future work.
+future work. Formal state migrations are a future phase (deferred until the
+domain model stabilizes and preserving existing state justifies the complexity),
+not part of this milestone.
 
 ---
 
