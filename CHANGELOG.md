@@ -5,6 +5,14 @@ All notable changes to MOMENTUM are documented here.
 ## [Unreleased]
 
 ### Design
+- **Area of Life / Domain model (ADR-0005):** documented the current conceptual
+  domain model — broad Areas of Life (**Taming / Tamed**) composed of **Domains**
+  (Taming / **Maintenance** / **Stasis**, with optional nesting), bounded
+  **Projects** (one-time or recurring; recurrence is a Project property, not a
+  hierarchy level), and **Missions** as the immediate actionable unit. The new
+  model supersedes the structural role of the Jungle / Colony metaphor
+  (ADR-0003, preserved as historical evolution). Design/documentation only —
+  the implemented Mountain hierarchy is unchanged and not renamed.
 - **Persistence policy (ADR-0004):** documented that while MOMENTUM is pre-1.0
   and the domain model is under active development, persisted state that is
   missing, malformed, structurally invalid, or incompatible with the current

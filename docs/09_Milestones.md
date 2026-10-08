@@ -115,15 +115,27 @@ not part of this milestone.
 
 ## Current Design Direction (note)
 
-The **product metaphor is evolving** from Mountains / Conquest to a broader
-**Jungle / Colony** model (Jungle, Territory, Taming / Clearing, **Colony
-Established**, Maintenance) — see `docs/adr/0003-jungle-and-colony-product-metaphor.md`
-and `docs/08_Feature_Ideas.md`.
+The **conceptual model has evolved** through three stages, each recorded as a
+decision and preserved as history:
+
+1. **Mountain / Conquest** (ADR-0002) — reduce an overwhelming objective to a
+   bounded, actionable unit.
+2. **Jungle / Colony** (ADR-0003) — persistent complexity is tamed and then
+   stewarded via maintenance.
+3. **Area of Life / Domain** (ADR-0005, current) — describes the steady state of
+   a person's life across broad Areas (**Taming / Tamed**), with **Domains**
+   (states: Taming / **Maintenance** / **Stasis**, optional nesting), bounded
+   **Projects** (one-time or recurring), and **Missions** as the immediate
+   actionable unit.
+
+The Area of Life / Domain model **supersedes the structural role** of Jungle /
+Colony; ADR-0003 remains preserved as historical evolution
+(`docs/08_Feature_Ideas.md`).
 
 The **implemented progression engine and its domain model remain unchanged** by
 this evolution. Milestone 2 (above) is preserved as an accurate historical record
 of what was built: the **Mountain Range → Mountain → Mole Hill → Mission**
 hierarchy, its progression rules, and its celebration of Hill Climbed / Mountain
-Conquered. Domain terminology may be reconsidered separately after the
-Jungle/Colony concept has been fully designed.
+Conquered. Domain terminology may be reconsidered separately after the Area of
+Life / Domain concept has been fully designed.
 

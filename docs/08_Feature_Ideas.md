@@ -1,6 +1,141 @@
 # MOMENTUM — Work in Progress
 
-## Product Language: Jungle and Colony
+## Current Conceptual Model: Area of Life and Domain
+
+The current conceptual direction has moved beyond the Jungle / Colony
+metaphor to an **Area of Life / Domain** model. This is design/documentation
+only — the implemented Mountain hierarchy remains unchanged (see
+*Relationship to the Currently Implemented Domain Model* below). The full
+decision is recorded in `docs/adr/0005-area-of-life-domain-model.md`.
+
+### Area of Life
+
+An **Area of Life** is a broad, meaningful part of a user's life (for example
+Home, Finances, Health & Wellness, Relationships, Career, Learning, Creative
+Life).
+
+An Area of Life has one of two area-level states:
+
+- **Taming** — establishing a sustainable, manageable operating system for the
+  area.
+- **Tamed** — the area has a functioning system and can be sustained.
+
+Taming / Tamed is **not a completion percentage**. An area becomes Tamed when
+its underlying system is sufficiently functional to sustain itself. A Tamed
+Area can return to Taming if its underlying system no longer works, or if
+circumstances have changed enough that the existing system must be
+re-established or reconfigured.
+
+Individual Projects or troubled Domains do **not** automatically cause the whole
+Area to return to Taming. State belongs to the smallest meaningful unit.
+
+### Domain
+
+**Domains** exist in both Area states. A Domain is an organizational /
+operational boundary within an Area of Life.
+
+During Area Taming, individual Domains may themselves be in Taming and require
+Projects / Missions to establish a workable system. Once a Domain is
+sufficiently established, its operating state can become **Maintenance**. Domains
+may also be in **Stasis** when intentional non-intervention is appropriate.
+
+A Domain may contain other Domains / Sub-Domains when additional structure
+reduces cognitive load. Nested Domains are not a requirement; structure should
+be user-meaningful and earn its existence. Domains are organizational /
+operational boundaries — not necessarily physical divisions, mutually exclusive
+systems, or independent systems. Different Areas of Life, and different users,
+may use very different Domain structures. MOMENTUM must not force a taxonomy
+merely because one is possible. Structure exists to reduce cognitive load, never
+to create it.
+
+### Project
+
+A **Project** is a bounded intervention / change within a Domain. Projects are
+not mutually exclusive with Domain Maintenance — a Domain can simultaneously be
+in Maintenance and have an active Project, and Maintenance can discover something
+that warrants a Project.
+
+A Project may be one-time or recurring. A recurring Project may be a periodic
+Reset (for example, Kitchen → Cleaning → annual deep-clean, or Garage →
+Organization → periodic "Garage Reset"). **Recurrence is a property of a
+Project**, not a separate hierarchy level or a special Project type.
+
+Projects contain **Missions**; Missions remain the immediate actionable unit.
+Not every observation needs to become a Project — small observations may simply
+become Missions. Repeated Projects can reveal that the Domain's underlying
+maintenance / organization system needs improvement.
+
+### Maintenance
+
+**Maintenance** is the operating mechanism by which an established Domain is
+sustained and observed, not merely a static checklist. During Maintenance:
+
+- Nothing may need attention → continue normally.
+- A small issue may produce a Mission.
+- A finite larger issue may produce a Project.
+- A recurring systemic issue may indicate the Domain's maintenance system should
+  be redesigned.
+
+Maintenance must remain lightweight and must not become a second
+project-management burden.
+
+### Stasis
+
+**Stasis** means intentional non-intervention because nothing currently warrants
+action. It is not neglect, failure, or task debt. Contextual events, cadence,
+use, or direct observation may prompt reassessment. Reassessment does not
+automatically create work; the user remains the authority.
+
+### System Principles
+
+- **The system observes; the user decides.** MOMENTUM can surface friction, but
+  it should not invent friction.
+- **The user should not need to understand the internal hierarchy to use
+  MOMENTUM.** The hierarchy / model is scaffolding, not bureaucracy.
+- **A Project does not destabilize a Tamed Area simply because it exists.**
+- **State belongs to the smallest meaningful unit.** Larger-scale state changes
+  (e.g. an Area returning to Taming) occur only when the larger system itself
+  needs re-establishment or reconfiguration.
+- **The model should describe reality flexibly** rather than force reality into
+  a rigid taxonomy.
+
+### Examples
+
+**Home (Tamed):**
+
+- Home → Tamed
+- Kitchen → Maintenance + Project: replace faucet
+- Guest Room → Stasis
+- Garage → Maintenance + recurring Project: Garage Reset
+
+**Home during initial Taming:**
+
+- Home → Taming
+- Kitchen → Taming → Projects / Missions
+- Garage → Taming → Projects / Missions
+
+As individual Domains stabilize, they move to Maintenance while the Area may
+remain Taming until the overall system is sufficiently established.
+
+**Nested structure:**
+
+- Home → Kitchen → Cleaning → Maintenance / Projects
+- Home → Kitchen → Organization → Maintenance / Projects
+
+Finances, Health & Wellness, Relationships, Career, Learning, and Creative Life
+have all been pressure-tested conceptually. They demonstrate that Domains can
+overlap in influence and need not be independent; dependencies are
+relationships, not necessarily hierarchy.
+
+---
+
+## Earlier Product Language: Jungle and Colony
+
+> The Jungle / Colony metaphor below is preserved as an **earlier conceptual
+> exploration**. It is superseded structurally by the Area of Life / Domain
+> model above (ADR-0005). The Jungle / Colony vocabulary is retained for
+> historical continuity and because it still shapes parts of the product
+> language.
 
 ### The Core Idea
 
@@ -185,8 +320,10 @@ The hierarchy remains stable while the user's execution context changes.
 
 ### Relationship to the Currently Implemented Domain Model
 
-The **Jungle/Colony model is the current product-language direction.** It is
-being evolved as concept and language first.
+The **Area of Life / Domain model** is the current conceptual/product-language
+direction (ADR-0005), evolved from the Jungle / Colony metaphor (ADR-0003),
+which itself evolved from the Mountain / Conquest metaphor (ADR-0002). Each
+step is preserved as historical evolution.
 
 The **currently implemented domain model** remains:
 
@@ -196,8 +333,8 @@ That is what is implemented in `src/services/progression.ts` and surfaced
 through the Mission Anchor (ADR-0001). It is intentionally **not renamed** as
 part of this conceptual evolution. The existing hierarchy and its implementation
 remain valid unless and until the domain model is deliberately reconsidered,
-after the Jungle/Colony concept has been fully designed (see
-`docs/adr/0003-jungle-and-colony-product-metaphor.md`).
+after the Area of Life / Domain concept has been fully designed (see
+`docs/adr/0005-area-of-life-domain-model.md`).
 
 ### Stabilization Before Maintenance
 
@@ -223,12 +360,15 @@ rather than an implementation requirement.
 
 ### Current Status
 
-The **Jungle/Colony** model is the current conceptual/product-language direction
-(ADR-0003), evolved from the Mountain/Conquest metaphor. The **implemented**
-vertical slice and its domain model remain the Mountain hierarchy:
-Milestone 2 established **Mountain Range → Mountain → Mole Hill → Mission** with
-the Mission lifecycle and completion progression in `src/services/progression.ts`
+The **Area of Life / Domain** model is the current conceptual / product-language
+direction (ADR-0005), evolved from the **Jungle / Colony** model (ADR-0003),
+which itself evolved from the **Mountain / Conquest** metaphor (ADR-0002). The
+**implemented** vertical slice and its domain model remain the Mountain
+hierarchy: Milestone 2 established
+**Mountain Range → Mountain → Mole Hill → Mission** with the Mission lifecycle
+and completion progression in `src/services/progression.ts`
 (see `docs/04_Mission_Engine.md` and
 `docs/adr/0002-mountains-to-mole-hills-progression.md`). Local persistence was
-added in Milestone 3. Recursive structures, maintenance, and the reward
-possibility remain future work.
+added in Milestone 3. Implementation of the Area of Life / Domain model,
+recursive structures, maintenance, and the reward possibility remain future
+work.
